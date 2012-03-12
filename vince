@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+conversion_table = [
+  {pattern: /###/, replace: 'h5. '},
+  {pattern: /##/, replace: 'h4. '},
+  {pattern: /#/, replace: 'h2. '},
+  {pattern: /\s*\u25ab/, replace: '******'},
+  {pattern: /\s*\u25aa/, replace: '*****'},
+  {pattern: /\s*\u25b9/, replace: '****'},
+  {pattern: /\s*\u25b8/, replace: '***'},
+  {pattern: /\s*\u25e6/, replace: '**'},
+  {pattern: /\s*\u2022/, replace: '*'}
+]
+
+input_filename = ARGV[0]
+input_file = File.open(input_filename)
+
+output_filename = File.basename(input_file) + '.confluence'
+output_file = File.new(output_filename, 'w')
+
+updated = ''
+input_file.each do |l|
+  conversion_table.each do |i|
+    if l.match(i[:pattern])
+      l = l.gsub(i[:pattern], i[:replace])
+      break
+    end
+  end
+  output_file.write l
+end
+output_file.close
+input_file.close
+
